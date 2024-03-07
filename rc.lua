@@ -45,7 +45,10 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
+-- MY STUFF
 beautiful.init("~/.config/awesome/default/theme.lua")
+-- MY STUFF
+
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
@@ -229,6 +232,40 @@ root.buttons(gears.table.join(
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
+    
+    -- MY STUFF
+  -- Audio
+    awful.key({ }, "XF86AudioRaiseVolume", function ()
+      awful.util.spawn("pamixer --increase 5") -- Increase volume by 5%
+      end),
+    awful.key({ }, "XF86AudioLowerVolume", function ()
+      awful.util.spawn("pamixer --decrease 5") -- Decrease volume by 5%
+      end),
+    awful.key({ }, "XF86AudioMute", function ()
+      awful.util.spawn("pamixer --toggle-mute") -- Toggle mute
+      end),
+  -- Brigness
+    awful.key({ }, "XF86MonBrightnessUp", function ()
+      awful.util.spawn("brightnessctl set +35") -- Increase brightness by 10%
+    end),
+    awful.key({ }, "XF86MonBrightnessDown", function ()
+      awful.util.spawn("brightnessctl set 35-") -- Decrease brightness by 10%
+    end),
+  -- Screen shot
+    awful.key({ }, "Print", function ()
+      awful.util.spawn("scrot") -- Take a screenshot with scrot
+    end, {description = "screenshot", group = "screen"}),
+    awful.key({ modkey,           }, "Print", function ()
+      awful.util.spawn("scrot -s")
+    end, {description = "crop screenshot", group = "screen"}),
+  -- Firefox
+    awful.key({ modkey,           }, "b", function ()
+      awful.util.spawn("firefox") 
+    end, {description = "run firefox", group = "applications"}),
+    awful.key({ modkey,           }, "v", function ()
+      awful.util.spawn("krita") 
+    end, {description = "run krita", group = "applications"}),
+    -- MY STUFF
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -568,10 +605,17 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 -- Start picom for transparency and effects
 awful.spawn.with_shell("picom")
+-- in .picom.conf
+-- backend = "glx";
+-- vsync = true;
+
 
 -- Set screen resolution
 awful.spawn.with_shell("xrandr --output eDP-1 --mode 1600x900 --rate 60")
 
 -- Set wallpaper
 awful.spawn.with_shell("feh --bg-scale ~/.config/awesome/default/background.png")
+
+
+-- MY STUFF
 
