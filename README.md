@@ -1,8 +1,7 @@
 # Dependencies
 
 apps:
-    sudo pacman -S pamixer, brightnessctl, scrot 
-    sudo luarocks install vicious
+> sudo pacman -S pamixer, brightnessctl, scrot, upower, acpi
 
 fonts:
-    AgaveNerdFont
+> AgaveNerdFont
