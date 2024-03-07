@@ -101,6 +101,7 @@ mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesom
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
 
+
 -- Menubar configuration
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
@@ -111,6 +112,11 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- {{{ Wibar
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
+
+
+-- Battery Widget
+batterywidget = wibox.widget.textbox()
+
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -163,6 +169,15 @@ local function set_wallpaper(s)
         gears.wallpaper.maximized(wallpaper, s, true)
     end
 end
+
+local function update_battery(widget)
+    local file = io.popen("acpi")
+    local status = file:read("*all")
+    file:close()
+
+    widget:set_text("Battery: " .. status)
+end
+
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
@@ -219,6 +234,15 @@ awful.screen.connect_for_each_screen(function(s)
             s.mylayoutbox,
         },
     }
+
+    update_battery(batterywidget)
+
+    -- Update every 60 seconds
+    --batterywidget_timer = timer({timeout = 60})
+    --batterywidget_timer:connect_signal("timeout", function() update_battery(batterywidget) end)
+    --batterywidget_timer:start()
+
+
 end)
 -- }}}
 
@@ -481,6 +505,7 @@ root.keys(globalkeys)
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
+
     -- All clients will match this rule.
     { rule = { },
       properties = { border_width = beautiful.border_width,
@@ -530,9 +555,11 @@ awful.rules.rules = {
       }, properties = { titlebars_enabled = true }
     },
 
+
     -- Set Firefox to always map on the tag named "2" on screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { screen = 1, tag = "2" } },
+    { rule = { class = "Firefox" },
+    properties = { screen = 1, tag = "󰖟 " }
+    },
 }
 -- }}}
 
