@@ -186,29 +186,35 @@ local function update_battery(widget)
     file:close()
       -- Extract battery percentage from the status string
     local battery_percentage = status:match("(%d+%%)")
+    local battery_percentage_conv = status:match("(%d+)%%")
 
     local current_icon = " "
-    if battery_percentage == "100%" then 
-      current_icon = " " 
-    elseif battery_percentage == "75%" then
-      current_icon = " " 
-    elseif battery_percentage == "50%" then
-      current_icon = " " 
-    elseif battery_percentage == "25%" then
-      current_icon = " " 
-    elseif battery_percentage == "5%" then
-      current_icon = " " 
+    if battery_percentage then
+        battery_percentage_conv = tonumber(battery_percentage_conv) -- Convert to number for comparison
+      if battery_percentage_conv >= 100 then
+        current_icon = " "
+      elseif battery_percentage_conv >= 75 then
+        current_icon = " "
+      elseif battery_percentage_conv >= 50 then
+        current_icon = " "
+      elseif battery_percentage_conv >= 25 then
+        current_icon = " "
+      elseif battery_percentage_conv >= 5 then
+        current_icon = " "
+      end
+    else
+      battery_percentage = "N/A" -- If percentage cannot be retrieved, set to "N/A"
     end
     widget:set_text(" ".. current_icon .. " " .. battery_percentage .. " ")
-    --widget:set_text("Battery: " .. status)
 end
 
-update_battery(batterywidget)
 
 -- Update every 60 seconds
 batterywidget_timer = timer({timeout = 60})
 batterywidget_timer:connect_signal("timeout", function() update_battery(batterywidget) end)
 batterywidget_timer:start()
+
+update_battery(batterywidget)
 
 
 local function update_wifi(widget)
