@@ -114,9 +114,11 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 mytextclock = wibox.widget.textclock()
 
 
+-- MY STUFF
 -- Battery Widget
 batterywidget = wibox.widget.textbox()
 
+-- MY STUFF
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -170,15 +172,32 @@ local function set_wallpaper(s)
     end
 end
 
+-- MY STUFF
 local function update_battery(widget)
     local file = io.popen("acpi")
     local status = file:read("*all")
     file:close()
+      -- Extract battery percentage from the status string
+    local battery_percentage = status:match("(%d+%%)")
 
-    widget:set_text("Battery: " .. status)
+    local current_icon = " "
+    if battery_percentage == "100%" then 
+      current_icon = " " 
+    elseif battery_percentage == "75%" then
+      current_icon = " " 
+    elseif battery_percentage == "50%" then
+      current_icon = " " 
+    elseif battery_percentage == "25%" then
+      current_icon = " " 
+    elseif battery_percentage == "5%" then
+      current_icon = " " 
+    end
+    widget:set_text(current_icon .. " " .. battery_percentage)
+    --widget:set_text("Battery: " .. status)
 end
 
 
+-- MY STUFF
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
@@ -230,18 +249,23 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
             wibox.widget.systray(),
+-- MY STUFF
+            batterywidget,
+-- MY STUFF
             mytextclock,
             s.mylayoutbox,
         },
     }
 
+-- MY STUFF
     update_battery(batterywidget)
 
     -- Update every 60 seconds
-    --batterywidget_timer = timer({timeout = 60})
-    --batterywidget_timer:connect_signal("timeout", function() update_battery(batterywidget) end)
-    --batterywidget_timer:start()
+    batterywidget_timer = timer({timeout = 60})
+    batterywidget_timer:connect_signal("timeout", function() update_battery(batterywidget) end)
+    batterywidget_timer:start()
 
+-- MY STUFF
 
 end)
 -- }}}
