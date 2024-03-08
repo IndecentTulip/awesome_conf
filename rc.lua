@@ -118,6 +118,12 @@ mytextclock = wibox.widget.textclock()
 -- Battery Widget
 batterywidget = wibox.widget.textbox()
 
+-- Wi-Fi Widget
+wifiwidget = wibox.widget.textbox()
+
+separator = wibox.widget.textbox()
+separator:set_text("|")
+
 -- MY STUFF
 
 -- Create a wibox for each screen and add it
@@ -173,6 +179,7 @@ local function set_wallpaper(s)
 end
 
 -- MY STUFF
+
 local function update_battery(widget)
     local file = io.popen("acpi")
     local status = file:read("*all")
@@ -192,10 +199,36 @@ local function update_battery(widget)
     elseif battery_percentage == "5%" then
       current_icon = " " 
     end
-    widget:set_text(current_icon .. " " .. battery_percentage)
+    widget:set_text(" ".. current_icon .. " " .. battery_percentage .. " ")
     --widget:set_text("Battery: " .. status)
 end
 
+update_battery(batterywidget)
+
+-- Update every 60 seconds
+batterywidget_timer = timer({timeout = 60})
+batterywidget_timer:connect_signal("timeout", function() update_battery(batterywidget) end)
+batterywidget_timer:start()
+
+
+local function update_wifi(widget)
+    local file = io.popen("iwconfig wlan0")  -- Replace 'wlan0' with your Wi-Fi interface
+    local status = file:read("*all")
+    file:close()
+
+    -- Extract Wi-Fi status from the output
+    local wifi_status = status:match("ESSID:\"([^\"]+)\"") or "Not connected"
+
+    -- Update widget with Wi-Fi status
+    widget:set_text(" Wi-Fi: " .. wifi_status .. " ")
+end
+
+update_wifi(wifiwidget)
+
+-- Update Wi-Fi status every 60 seconds
+wifiwidget_timer = timer({timeout = 60})
+wifiwidget_timer:connect_signal("timeout", function() update_wifi(wifiwidget) end)
+wifiwidget_timer:start()
 
 -- MY STUFF
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
@@ -248,10 +281,14 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
+            separator,
             wibox.widget.systray(),
 -- MY STUFF
             batterywidget,
+            separator,
+            wifiwidget,
 -- MY STUFF
+            separator,
             mytextclock,
             s.mylayoutbox,
         },
