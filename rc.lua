@@ -705,7 +705,7 @@ awful.spawn.with_shell("picom")
 
 
 -- Set screen resolution
-awful.spawn.with_shell("xrandr --output eDP-1 --mode 1600x900 --rate 60")
+awful.spawn.with_shell("xrandr --output eDP-1 --mode 1600x900 --rate 60 --gamma 0.99:0.99:0.88")
 
 -- Set wallpaper
 awful.spawn.with_shell("feh --bg-scale ~/.config/awesome/default/background.png")
