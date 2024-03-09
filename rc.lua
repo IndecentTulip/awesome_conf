@@ -121,6 +121,9 @@ batterywidget = wibox.widget.textbox()
 -- Wi-Fi Widget
 wifiwidget = wibox.widget.textbox()
 
+-- Caps lock
+capswidget = wibox.widget.textbox()
+
 separator = wibox.widget.textbox()
 separator:set_text("|")
 
@@ -216,7 +219,6 @@ batterywidget_timer:start()
 
 update_battery(batterywidget)
 
-
 local function update_wifi(widget)
     local file = io.popen("iwconfig wlan0")  -- Replace 'wlan0' with your Wi-Fi interface
     local status = file:read("*all")
@@ -236,6 +238,20 @@ wifiwidget_timer = timer({timeout = 60})
 wifiwidget_timer:connect_signal("timeout", function() update_wifi(wifiwidget) end)
 wifiwidget_timer:start()
 
+local function update_caps_state(widget)
+    local file = io.popen("xset q | awk '/Caps Lock/ {print $4}'")
+    local status = file:read("*all")
+    file:close()
+
+    widget:set_text(" Caps: " .. status .. " ")
+end
+
+
+caps_timer = timer({timeout = 1})
+caps_timer:connect_signal("timeout", function() update_caps_state(capswidget) end)
+caps_timer:start()
+
+update_caps_state(capswidget)
 -- MY STUFF
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
@@ -287,6 +303,8 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             mykeyboardlayout,
+            separator,
+            capswidget,
             separator,
             wibox.widget.systray(),
 -- MY STUFF
@@ -705,7 +723,7 @@ awful.spawn.with_shell("picom")
 
 
 -- Set screen resolution
-awful.spawn.with_shell("xrandr --output eDP-1 --mode 1600x900 --rate 60 --gamma 0.99:0.99:0.88")
+awful.spawn.with_shell("xrandr --output eDP-1 --mode 1600x900 --rate 60 --gamma 0.99:0.97:0.88")
 
 -- Set wallpaper
 awful.spawn.with_shell("feh --bg-scale ~/.config/awesome/default/background.png")
