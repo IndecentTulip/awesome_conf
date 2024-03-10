@@ -124,6 +124,9 @@ wifiwidget = wibox.widget.textbox()
 -- Caps lock
 capswidget = wibox.widget.textbox()
 
+-- Bluetooth Widget 
+bluetoothwidget = wibox.widget.textbox()
+
 separator = wibox.widget.textbox()
 separator:set_text("|")
 
@@ -239,19 +242,45 @@ wifiwidget_timer:connect_signal("timeout", function() update_wifi(wifiwidget) en
 wifiwidget_timer:start()
 
 local function update_caps_state(widget)
-    local file = io.popen("xset q | awk '/Caps Lock/ {print $4}'")
-    local status = file:read("*all")
-    file:close()
+  local file = io.popen("xset q | awk '/Caps Lock/ {print $4}'")
+  local status = file:read("*all")
+  file:close()
 
-    widget:set_text(" Caps: " .. status .. " ")
+    --widget:set_text(" 󰌎 " .. status)
+  local current_icon = "󰦿"
+  if status:match("on") then
+      current_icon = "󰧇"
+  else
+    current_icon = "󰦿"
+  end
+  widget:set_text(" ".. current_icon .. " ")
+
+
 end
-
 
 caps_timer = timer({timeout = 1})
 caps_timer:connect_signal("timeout", function() update_caps_state(capswidget) end)
 caps_timer:start()
 
 update_caps_state(capswidget)
+
+local function update_bluetooth(widget)
+  local file = io.popen("bluetoothctl show | awk '/Powered/ {print $2}'")
+  local status = file:read("*all")
+  file:close()
+
+  local current_icon = "󰂳"
+  if status:match("yes") then
+      current_icon = ""
+  else
+    current_icon = "󰂲"
+  end
+  widget:set_text(" ".. current_icon .. " ")
+
+end
+
+update_bluetooth(bluetoothwidget)
+
 -- MY STUFF
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
@@ -305,6 +334,8 @@ awful.screen.connect_for_each_screen(function(s)
             mykeyboardlayout,
             separator,
             capswidget,
+            separator,
+            bluetoothwidget,
             separator,
             wibox.widget.systray(),
 -- MY STUFF
@@ -457,9 +488,13 @@ globalkeys = gears.table.join(
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"}),
+-- MY STUFF
+--   awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
+--              {description = "run prompt", group = "launcher"}),
+   awful.key({ modkey },            "r",     function () awful.util.spawn("dmenu_run") end,
+              {description = "run dmenue", group = "launcher"}),
 
+-- MY STUFF
     awful.key({ modkey }, "x",
               function ()
                   awful.prompt.run {
