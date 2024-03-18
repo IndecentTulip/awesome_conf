@@ -247,11 +247,11 @@ local function update_caps_state(widget)
   file:close()
 
     --widget:set_text(" 󰌎 " .. status)
-  local current_icon = "󰦿"
+  local current_icon = " "
   if status:match("on") then
-      current_icon = "󰧇"
+      current_icon = "󰪛"
   else
-    current_icon = "󰦿"
+    current_icon = " "
   end
   widget:set_text(" ".. current_icon .. " ")
 
@@ -331,10 +331,8 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
-            separator,
             capswidget,
-            separator,
+            mykeyboardlayout,
             bluetoothwidget,
             separator,
             wibox.widget.systray(),
@@ -393,19 +391,19 @@ globalkeys = gears.table.join(
     end),
   -- Screen shot
     awful.key({ }, "Print", function ()
-      awful.util.spawn("scrot") -- Take a screenshot with scrot
+      awful.util.spawn("scrot  '/home/vul/Pictures/screenshot/%Y-%m-%d_%H-%M-%S.png'") -- Take a screenshot with scrot
     end, {description = "screenshot", group = "screen"}),
     awful.key({ modkey,           }, "Print", function ()
-      awful.util.spawn("scrot -s")
+      awful.util.spawn("scrot -s '/home/vul/Pictures/screenshot/%Y-%m-%d_%H-%M-%S.png'")
     end, {description = "crop screenshot", group = "screen"}),
   -- Firefox
     awful.key({ modkey,           }, "b", function ()
-      awful.util.spawn("firefox") 
+      awful.util.spawn("firefox")
     end, {description = "run firefox", group = "applications"}),
     awful.key({ modkey,           }, "v", function ()
-      awful.util.spawn("krita") 
+      awful.util.spawn("krita")
     end, {description = "run krita", group = "applications"}),
-    -- MY STUFF
+   -- MY STUFF
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -749,7 +747,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 
 -- MY STUFF
-
+--
 -- Start picom for transparency and effects
 awful.spawn.with_shell("picom")
 -- in .picom.conf
@@ -758,11 +756,12 @@ awful.spawn.with_shell("picom")
 
 
 -- Set screen resolution
-awful.spawn.with_shell("xrandr --output eDP-1 --mode 1600x900 --rate 60 --gamma 0.99:0.97:0.88")
+awful.spawn.with_shell("xrandr --output eDP-1 --mode 1920x1080 --rate 60 --gamma 0.99:0.97:0.88")
 
 -- Set wallpaper
 awful.spawn.with_shell("feh --bg-scale ~/.config/awesome/default/background.png")
 
+awful.spawn.with_shell("setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle")
 
 -- MY STUFF
 
