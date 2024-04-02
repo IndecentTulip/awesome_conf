@@ -130,6 +130,9 @@ bluetoothwidget = wibox.widget.textbox()
 separator = wibox.widget.textbox()
 separator:set_text("|")
 
+-- Sound/Audio
+soundwidget = wibox.widget.textbox()
+
 -- MY STUFF
 
 -- Create a wibox for each screen and add it
@@ -185,6 +188,23 @@ local function set_wallpaper(s)
 end
 
 -- MY STUFF
+
+local function update_sound(widget)
+    local file = io.popen("pamixer --get-volume-human")
+    local status = file:read("*all")
+    file:close()
+
+
+    local icon = " "
+    widget:set_text(" ".. icon .. " " .. status .. " ")
+end
+
+update_sound(soundwidget)
+soundwidget_timer = timer({timeout = 5})
+soundwidget_timer:connect_signal("timeout", function() update_sound(soundwidget) end)
+soundwidget_timer:start()
+
+
 
 local function update_battery(widget)
     local file = io.popen("acpi")
@@ -281,6 +301,7 @@ end
 
 update_bluetooth(bluetoothwidget)
 
+
 -- MY STUFF
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
@@ -339,6 +360,8 @@ awful.screen.connect_for_each_screen(function(s)
 -- MY STUFF
             batterywidget,
             separator,
+            soundwidget,
+            separator,
             wifiwidget,
 -- MY STUFF
             separator,
@@ -372,7 +395,7 @@ root.buttons(gears.table.join(
 globalkeys = gears.table.join(
     
     -- MY STUFF
-  -- Audio
+  -- Audio/Sound
     awful.key({ }, "XF86AudioRaiseVolume", function ()
       awful.util.spawn("pamixer --increase 5") -- Increase volume by 5%
       end),
