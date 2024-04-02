@@ -107,7 +107,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
+mykeyboardlayoutwidget= awful.widget.keyboardlayout()
 
 -- {{{ Wibar
 -- Create a textclock widget
@@ -128,7 +128,10 @@ capswidget = wibox.widget.textbox()
 bluetoothwidget = wibox.widget.textbox()
 
 separator = wibox.widget.textbox()
-separator:set_text("|")
+separator:set_text(" ")
+
+separatorcol = wibox.widget.textbox()
+separatorcol:set_text("|")
 
 -- Sound/Audio
 soundwidget = wibox.widget.textbox()
@@ -196,7 +199,7 @@ local function update_sound(widget)
 
 
     local icon = " "
-    widget:set_text(" ".. icon .. " " .. status .. " ")
+    widget:set_text(" " .. icon .. " " .. status .. " ")
 end
 
 update_sound(soundwidget)
@@ -231,7 +234,7 @@ local function update_battery(widget)
     else
       battery_percentage = "N/A" -- If percentage cannot be retrieved, set to "N/A"
     end
-    widget:set_text(" ".. current_icon .. " " .. battery_percentage .. " ")
+    widget:set_text(" " .. current_icon .. " " .. battery_percentage .. " ")
 end
 
 
@@ -251,7 +254,7 @@ local function update_wifi(widget)
     local wifi_status = status:match("ESSID:\"([^\"]+)\"") or "Not connected"
 
     -- Update widget with Wi-Fi status
-    widget:set_text(" Wi-Fi: " .. wifi_status .. " ")
+    widget:set_text(" " .. "󰖩  " .. wifi_status .. " ")
 end
 
 update_wifi(wifiwidget)
@@ -267,13 +270,13 @@ local function update_caps_state(widget)
   file:close()
 
     --widget:set_text(" 󰌎 " .. status)
-  local current_icon = " "
+  local current_icon = "  "
   if status:match("on") then
-      current_icon = "󰪛"
+      current_icon = "󰪛 "
   else
-    current_icon = " "
+    current_icon = "  "
   end
-  widget:set_text(" ".. current_icon .. " ")
+  widget:set_text(" " .. current_icon .. " ")
 
 
 end
@@ -289,13 +292,13 @@ local function update_bluetooth(widget)
   local status = file:read("*all")
   file:close()
 
-  local current_icon = "󰂳"
+  local current_icon = " "
   if status:match("yes") then
-      current_icon = ""
+      current_icon = "󰂱 "
   else
-    current_icon = "󰂲"
+    current_icon = "󰂲 "
   end
-  widget:set_text(" ".. current_icon .. " ")
+  widget:set_text(" " .. current_icon .. " ")
 
 end
 
@@ -352,19 +355,18 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+            separatorcol,
             capswidget,
-            mykeyboardlayout,
             bluetoothwidget,
-            separator,
+            mykeyboardlayoutwidget,
+            separatorcol,
             wibox.widget.systray(),
 -- MY STUFF
             batterywidget,
-            separator,
             soundwidget,
             separator,
             wifiwidget,
 -- MY STUFF
-            separator,
             mytextclock,
             s.mylayoutbox,
         },
