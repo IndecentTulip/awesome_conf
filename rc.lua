@@ -217,10 +217,10 @@ local function update_battery(widget)
     local battery_percentage = status:match("(%d+%%)")
     local battery_percentage_conv = status:match("(%d+)%%")
 
-    local current_icon = " "
+    local current_icon = " "
     if battery_percentage then
         battery_percentage_conv = tonumber(battery_percentage_conv) -- Convert to number for comparison
-      if battery_percentage_conv >= 100 then
+      if battery_percentage_conv >= 95 then
         current_icon = " "
       elseif battery_percentage_conv >= 75 then
         current_icon = " "
@@ -228,8 +228,6 @@ local function update_battery(widget)
         current_icon = " "
       elseif battery_percentage_conv >= 25 then
         current_icon = " "
-      elseif battery_percentage_conv >= 5 then
-        current_icon = " "
       end
     else
       battery_percentage = "N/A" -- If percentage cannot be retrieved, set to "N/A"
@@ -355,12 +353,12 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+            wibox.widget.systray(),
             separatorcol,
             capswidget,
             bluetoothwidget,
             mykeyboardlayoutwidget,
             separatorcol,
-            wibox.widget.systray(),
 -- MY STUFF
             batterywidget,
             soundwidget,
