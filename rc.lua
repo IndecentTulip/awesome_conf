@@ -395,6 +395,10 @@ root.buttons(gears.table.join(
 globalkeys = gears.table.join(
     
     -- MY STUFF
+  -- transparency
+    awful.key({ modkey,           }, "o", function ()
+      awful.util.spawn("/home/vul/.config/awesome/set_transparency.sh") end,
+      {description = "Set window transparency", group = "client"}),
   -- Audio/Sound
     awful.key({ }, "XF86AudioRaiseVolume", function ()
       awful.util.spawn("pamixer --increase 5") -- Increase volume by 5%
