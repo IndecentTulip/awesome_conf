@@ -6,4 +6,3 @@ apps:
 fonts:
 > AgaveNerdFont
 
-create a path file with the path to the ./set_transparency.sh script
