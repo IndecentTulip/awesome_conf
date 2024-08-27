@@ -430,6 +430,9 @@ globalkeys = gears.table.join(
     awful.key({ modkey,           }, "v", function ()
       awful.util.spawn("krita")
     end, {description = "run krita", group = "applications"}),
+    awful.key({ modkey,           }, "0", function ()
+        awful.spawn.with_shell("xcolor | xsel --clipboard --input")
+    end, {description = "Run xcolor and copy to clipboard", group = "custom"}),
    -- MY STUFF
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
