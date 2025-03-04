@@ -418,15 +418,16 @@ globalkeys = gears.table.join(
     end),
   -- Screen shot
     awful.key({ }, "Print", function ()
-      awful.util.spawn("scrot  '/home/vul/Pictures/screenshot/%Y-%m-%d_%H-%M-%S.png'") -- Take a screenshot with scrot
+    --awful.util.spawn("scrot  '/home/vul/Pictures/screenshot/%Y-%m-%d_%H-%M-%S.png'") -- Take a screenshot with scrot
+      awful.util.spawn("flameshot full -p /home/vul/Pictures/screenshot/") -- Take a screenshot with scrot
     end, {description = "screenshot", group = "screen"}),
     awful.key({ modkey,           }, "Print", function ()
-      awful.util.spawn("scrot -s '/home/vul/Pictures/screenshot/%Y-%m-%d_%H-%M-%S.png'")
+      awful.util.spawn("flameshot gui -p /home/vul/Pictures/screenshot/")
     end, {description = "crop screenshot", group = "screen"}),
-  -- Firefox
+  -- brave
     awful.key({ modkey,           }, "b", function ()
-      awful.util.spawn("firefox")
-    end, {description = "run firefox", group = "applications"}),
+      awful.util.spawn("brave")
+    end, {description = "run brave", group = "applications"}),
     awful.key({ modkey,           }, "v", function ()
       awful.util.spawn("krita")
     end, {description = "run krita", group = "applications"}),
@@ -705,7 +706,7 @@ awful.rules.rules = {
 
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
-    { rule = { class = "Firefox" },
+    { rule = { class = "Brave" },
     properties = { screen = 1, tag = "󰖟 " }
     },
 }
@@ -791,7 +792,7 @@ awful.spawn.with_shell("xrandr --output eDP-1 --mode 1920x1080 --rate 60 --gamma
 -- Set wallpaper
 awful.spawn.with_shell("feh --bg-scale ~/.config/awesome/default/background.png")
 
-awful.spawn.with_shell("setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle")
+awful.spawn.with_shell("setxkbmap -model pc104 -layout us,ru,ua -option grp:alt_shift_toggle")
 
 -- MY STUFF
 
